@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Freelink — Регистрация</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#0a0a0a;--bg2:#111;--bg3:#1a1a1a;
+      --white:#f0ede6;--gold:#c8a84b;--gold2:#e8c96a;
+      --gray:#888;--border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
+      --success:#4caf8a;
+    }
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--white);font-family:'Manrope',sans-serif;font-weight:400;min-height:100vh}
+
+    nav{position:sticky;top:0;z-index:100;padding:0 2.5rem;height:64px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:rgba(10,10,10,0.92);backdrop-filter:blur(12px)}
+    .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;color:var(--white);text-decoration:none}
+    .nav-logo span{color:var(--gold)}
+    .nav-right{display:flex;align-items:center;gap:12px}
+    .lang-toggle{display:flex;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;overflow:hidden}
+    .lang-btn{padding:6px 12px;cursor:pointer;color:var(--gray);border:none;background:transparent;font-family:'Manrope',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.04em;transition:all 0.2s}
+    .lang-btn.active{background:var(--gold);color:#000}
+    .nav-login{font-size:13px;color:var(--gray);text-decoration:none;transition:color 0.2s}
+    .nav-login:hover{color:var(--white)}
+
+    /* LAYOUT */
+    .page{display:grid;grid-template-columns:1fr 1fr;min-height:calc(100vh - 64px)}
+
+    /* LEFT PANEL */
+    .left-panel{position:relative;padding:4rem 3rem;border-right:1px solid var(--border);overflow:hidden;display:flex;flex-direction:column;justify-content:space-between}
+    .left-bg{position:absolute;inset:0;background:linear-gradient(160deg,#110f06 0%,var(--bg) 70%)}
+    .left-glow{position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(200,168,75,0.12) 0%,transparent 70%);bottom:-100px;right:-100px;pointer-events:none}
+    .left-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(200,168,75,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(200,168,75,0.03) 1px,transparent 1px);background-size:50px 50px}
+    .left-content{position:relative}
+    .left-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--gold);margin-bottom:1.5rem;display:flex;align-items:center;gap:8px}
+    .left-tag::before{content:'';width:20px;height:1px;background:var(--gold)}
+    .left-h{font-family:'Bebas Neue',sans-serif;font-size:clamp(38px,5vw,58px);letter-spacing:1.5px;line-height:0.92;margin-bottom:1.5rem}
+    .left-h .outline{-webkit-text-stroke:1px var(--white);color:transparent}
+    .left-h .gold{color:var(--gold)}
+    .left-sub{font-size:14px;color:var(--gray);line-height:1.75;margin-bottom:2.5rem;font-weight:300;max-width:340px}
+    .perks{display:flex;flex-direction:column;gap:14px}
+    .perk{display:flex;align-items:flex-start;gap:12px}
+    .perk-icon{width:36px;height:36px;border-radius:10px;background:rgba(200,168,75,0.1);border:1px solid rgba(200,168,75,0.2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+    .perk-text{}
+    .perk-name{font-size:13px;font-weight:600;color:var(--white);margin-bottom:2px}
+    .perk-desc{font-size:12px;color:var(--gray)}
+    .left-footer{position:relative;border-top:1px solid var(--border);padding-top:1.5rem}
+    .testimonial{font-size:13px;color:var(--gray);line-height:1.6;font-style:italic;margin-bottom:10px}
+    .testimonial-author{font-size:12px;color:var(--gold);font-weight:500}
+
+    /* RIGHT PANEL — FORM */
+    .right-panel{padding:4rem 3rem;display:flex;flex-direction:column}
+    .step-indicator{display:flex;align-items:center;gap:8px;margin-bottom:3rem}
+    .step-dot{width:28px;height:28px;border-radius:50%;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--gray);transition:all 0.3s;flex-shrink:0}
+    .step-dot.active{background:var(--gold);border-color:var(--gold);color:#000}
+    .step-dot.done{background:var(--success);border-color:var(--success);color:#000}
+    .step-line{flex:1;height:1px;background:var(--border);transition:background 0.3s}
+    .step-line.done{background:var(--success)}
+    .step-label{font-size:11px;color:var(--gray);display:none}
+
+    .form-step{display:none;animation:fadeUp 0.4s ease both}
+    .form-step.active{display:block}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+    .form-title{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:1px;margin-bottom:6px}
+    .form-sub{font-size:14px;color:var(--gray);margin-bottom:2rem;font-weight:300}
+
+    .field{margin-bottom:1.25rem}
+    .field-label{font-size:12px;font-weight:600;color:var(--gray);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;display:block}
+    .field input,.field select,.field textarea{
+      width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;
+      padding:13px 16px;font-family:'Manrope',sans-serif;font-size:14px;color:var(--white);
+      outline:none;transition:border-color 0.2s;
+    }
+    .field input::placeholder,.field textarea::placeholder{color:#444}
+    .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold)}
+    .field select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+    .field select option{background:var(--bg2)}
+    .field textarea{resize:vertical;min-height:100px;line-height:1.6}
+    .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+    .plan-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.5rem}
+    .plan-option{border:1.5px solid var(--border);border-radius:14px;padding:1.25rem;cursor:pointer;transition:all 0.2s;position:relative}
+    .plan-option:hover{border-color:var(--border2)}
+    .plan-option.selected{border-color:var(--gold);background:rgba(200,168,75,0.05)}
+    .plan-option input[type=radio]{position:absolute;opacity:0;pointer-events:none}
+    .plan-option-name{font-size:14px;font-weight:600;color:var(--white);margin-bottom:4px}
+    .plan-option-price{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--gold);letter-spacing:0.5px;line-height:1;margin-bottom:6px}
+    .plan-option-desc{font-size:12px;color:var(--gray)}
+    .plan-check{position:absolute;top:12px;right:12px;width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:10px;transition:all 0.2s}
+    .plan-option.selected .plan-check{background:var(--gold);border-color:var(--gold);color:#000}
+
+    .tag-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.5rem}
+    .tag-option{border:1px solid var(--border);border-radius:100px;padding:8px 16px;font-size:12px;font-weight:500;color:var(--gray);cursor:pointer;transition:all 0.2s;user-select:none}
+    .tag-option:hover{border-color:var(--border2);color:var(--white)}
+    .tag-option.selected{background:var(--gold);color:#000;border-color:var(--gold)}
+
+    .btn-next{width:100%;padding:14px;border-radius:10px;font-family:'Manrope',sans-serif;font-size:15px;font-weight:600;cursor:pointer;border:none;background:var(--gold);color:#000;transition:background 0.2s,transform 0.15s;margin-top:0.5rem}
+    .btn-next:hover{background:var(--gold2);transform:translateY(-1px)}
+    .btn-back-form{background:transparent;border:1px solid var(--border2);color:var(--white);padding:14px;border-radius:10px;font-family:'Manrope',sans-serif;font-size:15px;font-weight:500;cursor:pointer;transition:all 0.2s;width:100%;margin-top:10px}
+    .btn-back-form:hover{border-color:var(--white)}
+    .btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:0.5rem}
+
+    /* SUCCESS */
+    .success-screen{display:none;text-align:center;padding:2rem 0}
+    .success-screen.active{display:block;animation:fadeUp 0.5s ease both}
+    .success-icon{width:80px;height:80px;border-radius:50%;background:rgba(76,175,138,0.1);border:2px solid var(--success);display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 1.5rem}
+    .success-h{font-family:'Bebas Neue',sans-serif;font-size:40px;letter-spacing:1px;margin-bottom:8px}
+    .success-sub{font-size:14px;color:var(--gray);margin-bottom:2rem;line-height:1.7}
+
+    footer{border-top:1px solid var(--border);padding:1.75rem 2.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+    .footer-logo{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--white);text-decoration:none}
+    .footer-logo span{color:var(--gold)}
+    .footer-copy{font-size:12px;color:#444}
+
+    @media(max-width:720px){
+      .page{grid-template-columns:1fr}
+      .left-panel{display:none}
+      .right-panel{padding:2rem 1.5rem}
+      .field-row{grid-template-columns:1fr}
+      .btn-row{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">FREE<span>LINK</span></a>
+  <div class="nav-right">
+    <a href="index.html" class="nav-login" data-i18n="already">Уже есть аккаунт? Войти</a>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('ru')">RU</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+</nav>
+
+<div class="page">
+  <!-- LEFT -->
+  <div class="left-panel">
+    <div class="left-bg"></div>
+    <div class="left-glow"></div>
+    <div class="left-grid"></div>
+    <div class="left-content">
+      <div class="left-tag" data-i18n="left_tag">Для фрилансеров</div>
+      <div class="left-h">
+        <span data-i18n="left_h1">НАЧНИ</span><br>
+        <span class="outline" data-i18n="left_h2">ПОЛУЧАТЬ</span><br>
+        <span class="gold" data-i18n="left_h3">КЛИЕНТОВ</span>
+      </div>
+      <p class="left-sub" data-i18n="left_sub">Создай профиль за 5 минут и начни получать заявки от бизнесов по всей Европе.</p>
+      <div class="perks">
+        <div class="perk">
+          <div class="perk-icon">🎯</div>
+          <div class="perk-text">
+            <div class="perk-name" data-i18n="perk1_name">Прямой контакт</div>
+            <div class="perk-desc" data-i18n="perk1_desc">Клиенты пишут тебе напрямую — без посредников</div>
+          </div>
+        </div>
+        <div class="perk">
+          <div class="perk-icon">⚡</div>
+          <div class="perk-text">
+            <div class="perk-name" data-i18n="perk2_name">Быстрый старт</div>
+            <div class="perk-desc" data-i18n="perk2_desc">Профиль появляется в каталоге сразу после создания</div>
+          </div>
+        </div>
+        <div class="perk">
+          <div class="perk-icon">💰</div>
+          <div class="perk-text">
+            <div class="perk-name" data-i18n="perk3_name">Без комиссий</div>
+            <div class="perk-desc" data-i18n="perk3_desc">Мы не берём процент с твоих заказов</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="left-footer">
+      <div class="testimonial" data-i18n="testimonial">"За первый месяц получила 3 новых клиента через Freelink. Лучшая инвестиция €7 в месяц."</div>
+      <div class="testimonial-author">— Анна С., SMM-менеджер</div>
+    </div>
+  </div>
+
+  <!-- RIGHT FORM -->
+  <div class="right-panel">
+    <div class="step-indicator">
+      <div class="step-dot active" id="dot1">1</div>
+      <div class="step-line" id="line1"></div>
+      <div class="step-dot" id="dot2">2</div>
+      <div class="step-line" id="line2"></div>
+      <div class="step-dot" id="dot3">3</div>
+    </div>
+
+    <!-- STEP 1: PERSONAL INFO -->
+    <div class="form-step active" id="step1">
+      <div class="form-title" data-i18n="s1_title">ТВОИ ДАННЫЕ</div>
+      <div class="form-sub" data-i18n="s1_sub">Базовая информация для профиля</div>
+
+      <div class="field-row">
+        <div class="field"><label class="field-label" data-i18n="f_name">Имя</label><input type="text" data-i18n-ph="ph_name" placeholder="Анна"/></div>
+        <div class="field"><label class="field-label" data-i18n="f_surname">Фамилия</label><input type="text" data-i18n-ph="ph_surname" placeholder="Соколова"/></div>
+      </div>
+      <div class="field"><label class="field-label" data-i18n="f_email">Email</label><input type="email" placeholder="anna@email.com"/></div>
+      <div class="field"><label class="field-label" data-i18n="f_title">Профессия / должность</label><input type="text" data-i18n-ph="ph_title" placeholder="SMM-менеджер"/></div>
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label" data-i18n="f_city">Город</label>
+          <select>
+            <option data-i18n="opt_nicosia">Никосия</option>
+            <option data-i18n="opt_limassol">Лимасол</option>
+            <option data-i18n="opt_other">Другой</option>
+          </select>
+        </div>
+        <div class="field"><label class="field-label" data-i18n="f_rate">Ставка (€/ч)</label><input type="number" placeholder="25"/></div>
+      </div>
+      <button class="btn-next" onclick="goStep(2)" data-i18n="btn_next">Далее →</button>
+    </div>
+
+    <!-- STEP 2: CATEGORY & SERVICES -->
+    <div class="form-step" id="step2">
+      <div class="form-title" data-i18n="s2_title">УСЛУГИ И НАВЫКИ</div>
+      <div class="form-sub" data-i18n="s2_sub">Выбери категорию и расскажи о себе</div>
+
+      <div class="field">
+        <label class="field-label" data-i18n="f_category">Основная категория</label>
+        <select>
+          <option data-i18n="cat_smm">SMM / Маркетинг</option>
+          <option data-i18n="cat_design">Дизайн</option>
+          <option data-i18n="cat_dev">Разработка</option>
+          <option data-i18n="cat_copy">Копирайтинг</option>
+          <option data-i18n="cat_photo">Фото / Видео</option>
+          <option data-i18n="cat_trans">Переводы</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label class="field-label" data-i18n="f_skills">Навыки (выбери до 6)</label>
+        <div class="tag-grid">
+          <span class="tag-option" onclick="toggleTag(this)">Instagram</span>
+          <span class="tag-option" onclick="toggleTag(this)">TikTok</span>
+          <span class="tag-option" onclick="toggleTag(this)">Reels</span>
+          <span class="tag-option" onclick="toggleTag(this)">Canva</span>
+          <span class="tag-option" onclick="toggleTag(this)">Figma</span>
+          <span class="tag-option" onclick="toggleTag(this)">React</span>
+          <span class="tag-option" onclick="toggleTag(this)">HTML/CSS</span>
+          <span class="tag-option" onclick="toggleTag(this)">SEO</span>
+          <span class="tag-option" onclick="toggleTag(this)">Copywriting</span>
+          <span class="tag-option" onclick="toggleTag(this)">Photography</span>
+          <span class="tag-option" onclick="toggleTag(this)">Video editing</span>
+          <span class="tag-option" onclick="toggleTag(this)">Meta Ads</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" data-i18n="f_about">О себе</label>
+        <textarea data-i18n-ph="ph_about" placeholder="Расскажи о своём опыте, специализации и подходе к работе..."></textarea>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-back-form" onclick="goStep(1)" data-i18n="btn_back">← Назад</button>
+        <button class="btn-next" onclick="goStep(3)" data-i18n="btn_next">Далее →</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: PLAN -->
+    <div class="form-step" id="step3">
+      <div class="form-title" data-i18n="s3_title">ВЫБЕРИ ТАРИФ</div>
+      <div class="form-sub" data-i18n="s3_sub">Начни бесплатно или получи максимум с Pro</div>
+
+      <div class="plan-grid">
+        <div class="plan-option" onclick="selectPlan(this)">
+          <input type="radio" name="plan" value="free"/>
+          <div class="plan-check">✓</div>
+          <div class="plan-option-name" data-i18n="plan_free">Базовый</div>
+          <div class="plan-option-price">€0</div>
+          <div class="plan-option-desc" data-i18n="plan_free_desc">До 2 услуг · без значка Pro</div>
+        </div>
+        <div class="plan-option selected" onclick="selectPlan(this)">
+          <input type="radio" name="plan" value="pro" checked/>
+          <div class="plan-check">✓</div>
+          <div class="plan-option-name" data-i18n="plan_pro">Pro</div>
+          <div class="plan-option-price">€7</div>
+          <div class="plan-option-desc" data-i18n="plan_pro_desc">Безлимит · значок · приоритет</div>
+        </div>
+      </div>
+
+      <div class="field"><label class="field-label" data-i18n="f_password">Пароль</label><input type="password" data-i18n-ph="ph_pass" placeholder="Минимум 8 символов"/></div>
+      <div class="field"><label class="field-label" data-i18n="f_password2">Повтори пароль</label><input type="password" data-i18n-ph="ph_pass2" placeholder="Повтори пароль"/></div>
+
+      <div style="font-size:12px;color:var(--gray);line-height:1.6;margin-bottom:1.25rem">
+        <span data-i18n="terms_text">Регистрируясь, ты соглашаешься с </span><a href="#" style="color:var(--gold);" data-i18n="terms_link">Условиями использования</a>.
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-back-form" onclick="goStep(2)" data-i18n="btn_back">← Назад</button>
+        <button class="btn-next" onclick="showSuccess()" data-i18n="btn_register">Создать профиль →</button>
+      </div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="success-screen" id="successScreen">
+      <div class="success-icon">🎉</div>
+      <div class="success-h" data-i18n="success_h">ГОТОВО!</div>
+      <p class="success-sub" data-i18n="success_sub">Твой профиль создан и уже виден в каталоге. Мы отправили подтверждение на email.</p>
+      <a href="profile.html" class="btn-next" style="display:block;text-decoration:none;text-align:center" data-i18n="success_btn">Посмотреть профиль →</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <a href="index.html" class="footer-logo">FREE<span>LINK</span></a>
+  <span class="footer-copy">© 2025 Freelink</span>
+</footer>
+
+<script>
+const T={
+  ru:{
+    already:'Уже есть аккаунт? Войти',
+    left_tag:'Для фрилансеров', left_h1:'НАЧНИ', left_h2:'ПОЛУЧАТЬ', left_h3:'КЛИЕНТОВ',
+    left_sub:'Создай профиль за 5 минут и начни получать заявки от бизнесов по всей Европе.',
+    perk1_name:'Прямой контакт', perk1_desc:'Клиенты пишут тебе напрямую — без посредников',
+    perk2_name:'Быстрый старт', perk2_desc:'Профиль появляется в каталоге сразу после создания',
+    perk3_name:'Без комиссий', perk3_desc:'Мы не берём процент с твоих заказов',
+    testimonial:'"За первый месяц получила 3 новых клиента через Freelink. Лучшая инвестиция €7 в месяц."',
+    s1_title:'ТВОИ ДАННЫЕ', s1_sub:'Базовая информация для профиля',
+    f_name:'Имя', ph_name:'Анна', f_surname:'Фамилия', ph_surname:'Соколова',
+    f_email:'Email', f_title:'Профессия / должность', ph_title:'SMM-менеджер',
+    f_city:'Город', opt_nicosia:'Никосия', opt_limassol:'Лимасол', opt_other:'Другой',
+    f_rate:'Ставка (€/ч)', btn_next:'Далее →',
+    s2_title:'УСЛУГИ И НАВЫКИ', s2_sub:'Выбери категорию и расскажи о себе',
+    f_category:'Основная категория',
+    cat_smm:'SMM / Маркетинг', cat_design:'Дизайн', cat_dev:'Разработка', cat_copy:'Копирайтинг', cat_photo:'Фото / Видео', cat_trans:'Переводы',
+    f_skills:'Навыки (выбери до 6)', f_about:'О себе', ph_about:'Расскажи о своём опыте, специализации и подходе к работе...',
+    btn_back:'← Назад',
+    s3_title:'ВЫБЕРИ ТАРИФ', s3_sub:'Начни бесплатно или получи максимум с Pro',
+    plan_free:'Базовый', plan_free_desc:'До 2 услуг · без значка Pro',
+    plan_pro:'Pro', plan_pro_desc:'Безлимит · значок · приоритет',
+    f_password:'Пароль', ph_pass:'Минимум 8 символов', f_password2:'Повтори пароль', ph_pass2:'Повтори пароль',
+    terms_text:'Регистрируясь, ты соглашаешься с ', terms_link:'Условиями использования',
+    btn_register:'Создать профиль →',
+    success_h:'ГОТОВО!', success_sub:'Твой профиль создан и уже виден в каталоге. Мы отправили подтверждение на email.', success_btn:'Посмотреть профиль →'
+  },
+  en:{
+    already:'Already have an account? Sign in',
+    left_tag:'For freelancers', left_h1:'START', left_h2:'GETTING', left_h3:'CLIENTS',
+    left_sub:'Create your profile in 5 minutes and start receiving requests from businesses across Europe.',
+    perk1_name:'Direct contact', perk1_desc:'Clients reach out to you directly — no middlemen',
+    perk2_name:'Fast start', perk2_desc:'Your profile appears in the catalog right after creation',
+    perk3_name:'No commissions', perk3_desc:'We don\'t take a percentage of your earnings',
+    testimonial:'"In the first month I got 3 new clients through Freelink. Best €7/month investment."',
+    s1_title:'YOUR DETAILS', s1_sub:'Basic information for your profile',
+    f_name:'First name', ph_name:'Anna', f_surname:'Last name', ph_surname:'Sokolova',
+    f_email:'Email', f_title:'Profession / title', ph_title:'SMM Manager',
+    f_city:'City', opt_nicosia:'Nicosia', opt_limassol:'Limassol', opt_other:'Other',
+    f_rate:'Rate (€/h)', btn_next:'Next →',
+    s2_title:'SERVICES & SKILLS', s2_sub:'Choose a category and tell us about yourself',
+    f_category:'Main category',
+    cat_smm:'SMM / Marketing', cat_design:'Design', cat_dev:'Development', cat_copy:'Copywriting', cat_photo:'Photo / Video', cat_trans:'Translation',
+    f_skills:'Skills (choose up to 6)', f_about:'About you', ph_about:'Tell us about your experience, specialization and work approach...',
+    btn_back:'← Back',
+    s3_title:'CHOOSE A PLAN', s3_sub:'Start free or get the most with Pro',
+    plan_free:'Basic', plan_free_desc:'Up to 2 services · no Pro badge',
+    plan_pro:'Pro', plan_pro_desc:'Unlimited · badge · priority',
+    f_password:'Password', ph_pass:'At least 8 characters', f_password2:'Repeat password', ph_pass2:'Repeat password',
+    terms_text:'By signing up, you agree to our ', terms_link:'Terms of Service',
+    btn_register:'Create profile →',
+    success_h:'ALL DONE!', success_sub:'Your profile is created and visible in the catalog. We sent a confirmation to your email.', success_btn:'View your profile →'
+  }
+};
+
+function setLang(lang){
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+  const t=T[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.getAttribute('data-i18n');
+    if(t[k])el.textContent=t[k];
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{
+    const k=el.getAttribute('data-i18n-ph');
+    if(t[k])el.placeholder=t[k];
+  });
+}
+
+function goStep(n){
+  document.querySelectorAll('.form-step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('step'+n).classList.add('active');
+  [1,2,3].forEach(i=>{
+    const dot=document.getElementById('dot'+i);
+    dot.classList.remove('active','done');
+    if(i<n)dot.classList.add('done'),dot.textContent='✓';
+    else if(i===n)dot.classList.add('active'),dot.textContent=i;
+    else dot.textContent=i;
+    if(i<3){const line=document.getElementById('line'+i);line.classList.toggle('done',i<n);}
+  });
+}
+
+function selectPlan(el){
+  document.querySelectorAll('.plan-option').forEach(p=>p.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function toggleTag(el){
+  const selected=document.querySelectorAll('.tag-option.selected');
+  if(el.classList.contains('selected')){el.classList.remove('selected');return;}
+  if(selected.length>=6)return;
+  el.classList.add('selected');
+}
+
+function showSuccess(){
+  document.querySelectorAll('.form-step').forEach(s=>s.classList.remove('active'));
+  document.querySelector('.step-indicator').style.opacity='0.3';
+  document.getElementById('successScreen').classList.add('active');
+}
+</script>
+</body>
+</html>

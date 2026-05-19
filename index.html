@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Freelink</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0a0a;
+      --bg2: #111111;
+      --bg3: #1a1a1a;
+      --white: #f0ede6;
+      --gold: #c8a84b;
+      --gold2: #e8c96a;
+      --gray: #888;
+      --border: rgba(255,255,255,0.08);
+      --border2: rgba(255,255,255,0.14);
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--white); font-family: 'Manrope', sans-serif; font-weight: 400; overflow-x: hidden; }
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      padding: 0 2.5rem; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(12px);
+    }
+    .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 2px; color: var(--white); text-decoration: none; }
+    .nav-logo span { color: var(--gold); }
+    .nav-center { display: flex; gap: 2rem; }
+    .nav-center a { font-size: 13px; font-weight: 500; color: var(--gray); text-decoration: none; letter-spacing: 0.04em; transition: color 0.2s; }
+    .nav-center a:hover { color: var(--white); }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .lang-toggle { display: flex; background: var(--bg3); border: 1px solid var(--border2); border-radius: 8px; overflow: hidden; }
+    .lang-btn { padding: 6px 12px; cursor: pointer; color: var(--gray); border: none; background: transparent; font-family: 'Manrope', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.04em; transition: all 0.2s; }
+    .lang-btn.active { background: var(--gold); color: #000; }
+    .nav-cta { background: var(--gold); color: #000; border: none; padding: 9px 20px; border-radius: 8px; font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.2s, transform 0.15s; }
+    .nav-cta:hover { background: var(--gold2); transform: translateY(-1px); }
+
+    /* HERO */
+    .hero { position: relative; padding: 7rem 2.5rem 5rem; overflow: hidden; }
+    .hero-grid-bg {
+      position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(200,168,75,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(200,168,75,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
+    }
+    .hero-glow { position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(200,168,75,0.12) 0%, transparent 70%); top: -100px; left: 50%; transform: translateX(-50%); pointer-events: none; }
+    .hero-inner { position: relative; max-width: 960px; margin: 0 auto; }
+    .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--border2); border-radius: 100px; padding: 6px 16px; font-size: 12px; font-weight: 500; color: var(--gold); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 2rem; }
+    .hero-dot { width: 6px; height: 6px; background: var(--gold); border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+    .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(60px, 10vw, 120px); line-height: 0.92; letter-spacing: 2px; margin-bottom: 2rem; }
+    .hero h1 .outline { -webkit-text-stroke: 1.5px var(--white); color: transparent; }
+    .hero h1 .gold { color: var(--gold); }
+    .hero-sub { max-width: 460px; font-size: 16px; color: var(--gray); line-height: 1.7; margin-bottom: 2.5rem; font-weight: 300; }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn-gold { background: var(--gold); color: #000; border: none; padding: 14px 30px; border-radius: 10px; font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; transition: background 0.2s, transform 0.15s; }
+    .btn-gold:hover { background: var(--gold2); transform: translateY(-2px); }
+    .btn-outline { background: transparent; color: var(--white); border: 1px solid var(--border2); padding: 14px 30px; border-radius: 10px; font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; text-decoration: none; display: inline-block; transition: border-color 0.2s, transform 0.15s; }
+    .btn-outline:hover { border-color: rgba(255,255,255,0.4); transform: translateY(-2px); }
+
+    /* STATS */
+    .stats-bar { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 1.75rem 2.5rem; display: flex; justify-content: center; gap: 4rem; flex-wrap: wrap; }
+    .stat { text-align: center; }
+    .stat-n { font-family: 'Bebas Neue', sans-serif; font-size: 40px; letter-spacing: 1px; color: var(--gold); display: block; line-height: 1; margin-bottom: 4px; }
+    .stat-l { font-size: 12px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500; }
+
+    /* MARQUEE */
+    .marquee-wrap { overflow: hidden; border-bottom: 1px solid var(--border); padding: 14px 0; background: var(--bg2); }
+    .marquee-track { display: flex; animation: marquee 28s linear infinite; white-space: nowrap; }
+    .marquee-item { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--gray); padding: 0 2.5rem; border-right: 1px solid var(--border); flex-shrink: 0; }
+    .marquee-item span { color: var(--gold); margin-right: 8px; }
+    @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+    /* SEARCH */
+    .search-section { max-width: 860px; margin: 4rem auto 0; padding: 0 2.5rem; }
+    .search-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gray); margin-bottom: 12px; }
+    .search-box { display: flex; gap: 10px; background: var(--bg2); border: 1px solid var(--border2); border-radius: 14px; padding: 8px; margin-bottom: 14px; transition: border-color 0.2s; }
+    .search-box:focus-within { border-color: var(--gold); }
+    .search-box input { flex: 1; background: transparent; border: none; outline: none; font-family: 'Manrope', sans-serif; font-size: 15px; color: var(--white); padding: 6px 10px; }
+    .search-box input::placeholder { color: #444; }
+    .search-box button { background: var(--gold); color: #000; border: none; padding: 10px 24px; border-radius: 8px; font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+    .search-box button:hover { background: var(--gold2); }
+    .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 3rem; }
+    .chip { border: 1px solid var(--border); border-radius: 100px; padding: 7px 16px; font-size: 12px; font-weight: 500; color: var(--gray); cursor: pointer; transition: all 0.2s; background: transparent; }
+    .chip:hover { border-color: var(--border2); color: var(--white); }
+    .chip.active { background: var(--gold); color: #000; border-color: var(--gold); }
+
+    /* SECTION HEAD */
+    .section-head { max-width: 860px; margin: 0 auto 1.5rem; padding: 0 2.5rem; display: flex; align-items: center; justify-content: space-between; }
+    .section-head h2 { font-family: 'Bebas Neue', sans-serif; font-size: 32px; letter-spacing: 1.5px; }
+    .section-head a { font-size: 12px; font-weight: 500; color: var(--gold); text-decoration: none; letter-spacing: 0.04em; border-bottom: 1px solid rgba(200,168,75,0.3); padding-bottom: 2px; }
+    .section-head a:hover { border-color: var(--gold); }
+
+    /* CARDS */
+    .cards { max-width: 860px; margin: 0 auto 5rem; padding: 0 2.5rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+    .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 18px; padding: 1.5rem; cursor: pointer; transition: border-color 0.2s, transform 0.2s, background 0.2s; position: relative; overflow: hidden; }
+    .card:hover { border-color: var(--border2); transform: translateY(-4px); background: #161616; }
+    .card.pro { border-color: rgba(200,168,75,0.3); }
+    .card.pro:hover { border-color: var(--gold); }
+    .pro-tag { position: absolute; top: 1.25rem; right: 1.25rem; background: var(--gold); color: #000; font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 8px; border-radius: 100px; }
+    .avatar { width: 50px; height: 50px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 600; margin-bottom: 14px; }
+    .card-name { font-size: 15px; font-weight: 600; margin-bottom: 3px; color: var(--white); }
+    .card-role { font-size: 12px; color: var(--gray); margin-bottom: 12px; }
+    .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 14px; }
+    .tag { font-size: 11px; background: var(--bg3); color: #777; border: 1px solid var(--border); padding: 3px 10px; border-radius: 100px; }
+    .card-foot { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 12px; }
+    .rating { font-size: 12px; color: var(--gray); }
+    .price { font-size: 13px; font-weight: 600; color: var(--gold); }
+
+    /* HOW */
+    .how { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 5rem 2.5rem; }
+    .how-inner { max-width: 860px; margin: 0 auto; }
+    .how-head { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3.5rem; flex-wrap: wrap; gap: 1rem; }
+    .how-head h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(40px, 6vw, 64px); letter-spacing: 2px; line-height: 0.9; }
+    .how-head h2 .outline { -webkit-text-stroke: 1px var(--white); color: transparent; }
+    .how-head p { font-size: 14px; color: var(--gray); max-width: 240px; line-height: 1.6; text-align: right; }
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--border); border-radius: 18px; overflow: hidden; }
+    .step { background: var(--bg); padding: 2rem; border-right: 1px solid var(--border); }
+    .step:last-child { border-right: none; }
+    .step-n { font-family: 'Bebas Neue', sans-serif; font-size: 56px; color: rgba(200,168,75,0.15); line-height: 1; margin-bottom: 16px; display: block; }
+    .step h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; color: var(--white); }
+    .step p { font-size: 13px; color: var(--gray); line-height: 1.65; }
+
+    /* PRICING */
+    .pricing { max-width: 800px; margin: 0 auto; padding: 5rem 2.5rem; }
+    .pricing-head { text-align: center; margin-bottom: 3rem; }
+    .pricing-head h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(40px, 6vw, 64px); letter-spacing: 2px; margin-bottom: 0.75rem; }
+    .pricing-head p { font-size: 15px; color: var(--gray); font-weight: 300; }
+    .plans { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .plan { border: 1px solid var(--border); border-radius: 20px; padding: 2rem; background: var(--bg2); }
+    .plan.featured { border-color: var(--gold); background: linear-gradient(160deg, #1a1508 0%, var(--bg2) 60%); position: relative; overflow: hidden; }
+    .plan.featured::before { content: ''; position: absolute; top: -60px; right: -60px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(200,168,75,0.15) 0%, transparent 70%); }
+    .plan-tier { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray); margin-bottom: 1.25rem; display: block; }
+    .plan.featured .plan-tier { color: var(--gold); }
+    .plan-amount { font-family: 'Bebas Neue', sans-serif; font-size: 58px; letter-spacing: 1px; line-height: 1; margin-bottom: 4px; display: block; }
+    .plan-per { font-size: 13px; color: var(--gray); margin-bottom: 1.75rem; display: block; }
+    .plan-list { list-style: none; margin-bottom: 1.75rem; }
+    .plan-list li { font-size: 13px; color: var(--gray); padding: 8px 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+    .plan-list li:last-child { border-bottom: none; }
+    .plan-list li.yes { color: var(--white); }
+    .ico { font-size: 14px; width: 16px; flex-shrink: 0; }
+    .ico.y { color: var(--gold); }
+    .ico.n { color: #333; }
+    .plan-cta { width: 100%; padding: 13px; border-radius: 10px; font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; border: 1px solid var(--border2); background: transparent; color: var(--white); transition: all 0.2s; }
+    .plan-cta:hover { border-color: var(--white); }
+    .plan.featured .plan-cta { background: var(--gold); color: #000; border-color: var(--gold); }
+    .plan.featured .plan-cta:hover { background: var(--gold2); }
+
+    /* CTA BANNER */
+    .cta-banner { margin: 0 2.5rem 5rem; border: 1px solid rgba(200,168,75,0.25); border-radius: 20px; padding: 3.5rem; background: linear-gradient(135deg, #110f06 0%, var(--bg2) 100%); display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap; position: relative; overflow: hidden; }
+    .cta-banner::before { content: ''; position: absolute; right: -80px; top: 50%; transform: translateY(-50%); width: 300px; height: 300px; background: radial-gradient(circle, rgba(200,168,75,0.1) 0%, transparent 70%); }
+    .cta-banner h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(30px, 4vw, 46px); letter-spacing: 1.5px; line-height: 1.1; }
+    .cta-banner p { font-size: 14px; color: var(--gray); margin-top: 6px; }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); padding: 2rem 2.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 2px; color: var(--white); text-decoration: none; }
+    .footer-logo span { color: var(--gold); }
+    .footer-links { display: flex; gap: 2rem; }
+    .footer-links a { font-size: 12px; color: var(--gray); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--white); }
+    .footer-copy { font-size: 12px; color: #444; }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+    .hero-eyebrow { animation: fadeUp 0.6s ease 0.1s both; }
+    .hero h1 { animation: fadeUp 0.6s ease 0.2s both; }
+    .hero-sub { animation: fadeUp 0.6s ease 0.3s both; }
+    .hero-actions { animation: fadeUp 0.6s ease 0.4s both; }
+
+    @media (max-width: 640px) {
+      .steps { grid-template-columns: 1fr; }
+      .step { border-right: none; border-bottom: 1px solid var(--border); }
+      .step:last-child { border-bottom: none; }
+      .plans { grid-template-columns: 1fr; }
+      .nav-center { display: none; }
+      .how-head p { text-align: left; max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">FREE<span>LINK</span></a>
+  <div class="nav-center">
+    <a href="#catalog" data-i18n="nav_catalog">Каталог</a>
+    <a href="#how" data-i18n="nav_how">Как это работает</a>
+    <a href="#pricing" data-i18n="nav_pricing">Цены</a>
+  </div>
+  <div class="nav-right">
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('ru')">RU</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
+    <button class="nav-cta" data-i18n="nav_cta">Разместить профиль</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <span class="hero-dot"></span>
+      <span data-i18n="hero_tag">Каталог фрилансеров</span>
+    </div>
+    <h1>
+      <span data-i18n="hero_h1_1">НАЙДИ</span><br>
+      <span class="outline" data-i18n="hero_h1_2">ЛУЧШЕГО</span><br>
+      <span class="gold" data-i18n="hero_h1_3">СПЕЦИАЛИСТА</span>
+    </h1>
+    <p class="hero-sub" data-i18n="hero_sub">Freelink — место, где бизнес находит фрилансеров, а фрилансеры находят клиентов. Без комиссий для клиентов. Без посредников.</p>
+    <div class="hero-actions">
+      <a href="#catalog" class="btn-gold" data-i18n="hero_btn1">Найти специалиста</a>
+      <a href="#pricing" class="btn-outline" data-i18n="hero_btn2">Разместить профиль</a>
+    </div>
+  </div>
+</section>
+
+<div class="stats-bar">
+  <div class="stat"><span class="stat-n">340+</span><span class="stat-l" data-i18n="stat1">Фрилансеров</span></div>
+  <div class="stat"><span class="stat-n">18</span><span class="stat-l" data-i18n="stat2">Категорий</span></div>
+  <div class="stat"><span class="stat-n">4.8★</span><span class="stat-l" data-i18n="stat3">Средний рейтинг</span></div>
+  <div class="stat"><span class="stat-n">€0</span><span class="stat-l" data-i18n="stat4">Комиссия клиентам</span></div>
+</div>
+
+<div class="marquee-wrap"><div class="marquee-track" id="marqueeTrack"></div></div>
+
+<section class="search-section" id="catalog">
+  <div class="search-label" data-i18n="search_label">Поиск специалистов</div>
+  <div class="search-box">
+    <input type="text" data-i18n-ph="search_ph" placeholder="Поиск: SMM, логотип, сайт..." />
+    <button data-i18n="search_btn">Найти</button>
+  </div>
+  <div class="chips">
+    <button class="chip active" data-i18n="cat_all">Все</button>
+    <button class="chip" data-i18n="cat_smm">SMM / Маркетинг</button>
+    <button class="chip" data-i18n="cat_design">Дизайн</button>
+    <button class="chip" data-i18n="cat_dev">Разработка</button>
+    <button class="chip" data-i18n="cat_copy">Копирайтинг</button>
+    <button class="chip" data-i18n="cat_photo">Фото / Видео</button>
+    <button class="chip" data-i18n="cat_trans">Переводы</button>
+  </div>
+</section>
+
+<div class="section-head">
+  <h2 data-i18n="popular_title">Популярные специалисты</h2>
+  <a href="#" data-i18n="popular_all">Смотреть всех →</a>
+</div>
+<div class="cards">
+  <div class="card pro">
+    <span class="pro-tag">Pro</span>
+    <div class="avatar" style="background:#1e1a0a;color:#c8a84b;">АС</div>
+    <div class="card-name">Анна С.</div>
+    <div class="card-role" data-i18n="role1">SMM-менеджер</div>
+    <div class="tags"><span class="tag">Instagram</span><span class="tag">TikTok</span><span class="tag">Reels</span></div>
+    <div class="card-foot"><span class="rating">★ 4.9 · 43</span><span class="price">€25/ч</span></div>
+  </div>
+  <div class="card pro">
+    <span class="pro-tag">Pro</span>
+    <div class="avatar" style="background:#0a1a12;color:#4caf8a;">МД</div>
+    <div class="card-name">Максим Д.</div>
+    <div class="card-role" data-i18n="role2">Веб-разработчик</div>
+    <div class="tags"><span class="tag">HTML/CSS</span><span class="tag">React</span><span class="tag">Node.js</span></div>
+    <div class="card-foot"><span class="rating">★ 4.8 · 61</span><span class="price">€40/ч</span></div>
+  </div>
+  <div class="card">
+    <div class="avatar" style="background:#1a0a0a;color:#cf6f6f;">ОК</div>
+    <div class="card-name">Ольга К.</div>
+    <div class="card-role" data-i18n="role3">Графический дизайнер</div>
+    <div class="tags"><span class="tag">Логотипы</span><span class="tag">Figma</span><span class="tag">Canva</span></div>
+    <div class="card-foot"><span class="rating">★ 4.6 · 28</span><span class="price">€15/ч</span></div>
+  </div>
+  <div class="card">
+    <div class="avatar" style="background:#0d0a1a;color:#9a7fcf;">ВП</div>
+    <div class="card-name">Виктор П.</div>
+    <div class="card-role" data-i18n="role4">Копирайтер · SEO</div>
+    <div class="tags"><span class="tag">SEO</span><span class="tag">Email</span><span class="tag">Блог</span></div>
+    <div class="card-foot"><span class="rating">★ 4.7 · 35</span><span class="price">€10/ч</span></div>
+  </div>
+</div>
+
+<section class="how" id="how">
+  <div class="how-inner">
+    <div class="how-head">
+      <h2><span data-i18n="how_h1">КАК ЭТО</span><br><span class="outline" data-i18n="how_h2">РАБОТАЕТ</span></h2>
+      <p data-i18n="how_sub">Три шага — и ты уже получаешь клиентов.</p>
+    </div>
+    <div class="steps">
+      <div class="step"><span class="step-n">01</span><h3 data-i18n="step1_h">Создай профиль</h3><p data-i18n="step1_p">Заполни информацию, добавь услуги и портфолио. Занимает меньше 5 минут.</p></div>
+      <div class="step"><span class="step-n">02</span><h3 data-i18n="step2_h">Выбери тариф</h3><p data-i18n="step2_p">Бесплатно или Pro — чтобы попасть в топ поиска и получить значок.</p></div>
+      <div class="step"><span class="step-n">03</span><h3 data-i18n="step3_h">Получай клиентов</h3><p data-i18n="step3_p">Клиенты находят тебя напрямую и пишут без посредников и комиссий.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="pricing" id="pricing">
+  <div class="pricing-head">
+    <h2 data-i18n="pricing_h">ТАРИФЫ</h2>
+    <p data-i18n="pricing_sub">Без скрытых комиссий. Платишь только за размещение.</p>
+  </div>
+  <div class="plans">
+    <div class="plan">
+      <span class="plan-tier" data-i18n="plan1_tier">Базовый</span>
+      <span class="plan-amount">€0</span>
+      <span class="plan-per" data-i18n="plan1_per">навсегда бесплатно</span>
+      <ul class="plan-list">
+        <li class="yes"><span class="ico y">✓</span><span data-i18n="f1">Профиль в каталоге</span></li>
+        <li class="yes"><span class="ico y">✓</span><span data-i18n="f2">До 2 услуг</span></li>
+        <li><span class="ico n">✗</span><span data-i18n="f3">Значок Pro</span></li>
+        <li><span class="ico n">✗</span><span data-i18n="f4">Приоритет в поиске</span></li>
+        <li><span class="ico n">✗</span><span data-i18n="f5">Расширенная статистика</span></li>
+      </ul>
+      <button class="plan-cta" data-i18n="plan1_cta">Начать бесплатно</button>
+    </div>
+    <div class="plan featured">
+      <span class="plan-tier" data-i18n="plan2_tier">★ Pro — Популярный</span>
+      <span class="plan-amount">€7</span>
+      <span class="plan-per" data-i18n="plan2_per">в месяц · отмена в любой момент</span>
+      <ul class="plan-list">
+        <li class="yes"><span class="ico y">✓</span><span data-i18n="f1">Профиль в каталоге</span></li>
+        <li class="yes"><span class="ico y">✓</span><span data-i18n="f2b">Неограниченно услуг</span></li>
+        <li class="yes"><span class="ico y">✓</span><span data-i18n="f3">Значок Pro</span></li>
+        <li class="yes"><span class="ico y">✓</span><span data-i18n="f4">Приоритет в поиске</span></li>
+        <li class="yes"><span class="ico y">✓</span><span data-i18n="f5">Расширенная статистика</span></li>
+      </ul>
+      <button class="plan-cta" data-i18n="plan2_cta">Попробовать Pro</button>
+    </div>
+  </div>
+</section>
+
+<div class="cta-banner">
+  <div>
+    <h2 data-i18n="cta_h">ГОТОВ НАЧАТЬ?</h2>
+    <p data-i18n="cta_p">Создай профиль бесплатно — займёт меньше 5 минут.</p>
+  </div>
+  <a href="#" class="btn-gold" data-i18n="cta_btn">Разместить профиль →</a>
+</div>
+
+<footer>
+  <a href="#" class="footer-logo">FREE<span>LINK</span></a>
+  <div class="footer-links">
+    <a href="#" data-i18n="footer_terms">Условия</a>
+    <a href="#" data-i18n="footer_privacy">Конфиденциальность</a>
+    <a href="#" data-i18n="footer_contact">Контакт</a>
+  </div>
+  <span class="footer-copy">© 2025 Freelink</span>
+</footer>
+
+<script>
+const T = {
+  ru: {
+    nav_catalog:'Каталог', nav_how:'Как это работает', nav_pricing:'Цены', nav_cta:'Разместить профиль',
+    hero_tag:'Каталог фрилансеров', hero_h1_1:'НАЙДИ', hero_h1_2:'ЛУЧШЕГО', hero_h1_3:'СПЕЦИАЛИСТА',
+    hero_sub:'Freelink — место, где бизнес находит фрилансеров, а фрилансеры находят клиентов. Без комиссий для клиентов. Без посредников.',
+    hero_btn1:'Найти специалиста', hero_btn2:'Разместить профиль',
+    stat1:'Фрилансеров', stat2:'Категорий', stat3:'Средний рейтинг', stat4:'Комиссия клиентам',
+    search_label:'Поиск специалистов', search_ph:'Поиск: SMM, логотип, сайт...', search_btn:'Найти',
+    cat_all:'Все', cat_smm:'SMM / Маркетинг', cat_design:'Дизайн', cat_dev:'Разработка', cat_copy:'Копирайтинг', cat_photo:'Фото / Видео', cat_trans:'Переводы',
+    popular_title:'Популярные специалисты', popular_all:'Смотреть всех →',
+    role1:'SMM-менеджер', role2:'Веб-разработчик', role3:'Графический дизайнер', role4:'Копирайтер · SEO',
+    how_h1:'КАК ЭТО', how_h2:'РАБОТАЕТ', how_sub:'Три шага — и ты уже получаешь клиентов.',
+    step1_h:'Создай профиль', step1_p:'Заполни информацию, добавь услуги и портфолио. Занимает меньше 5 минут.',
+    step2_h:'Выбери тариф', step2_p:'Бесплатно или Pro — чтобы попасть в топ поиска и получить значок.',
+    step3_h:'Получай клиентов', step3_p:'Клиенты находят тебя напрямую и пишут без посредников и комиссий.',
+    pricing_h:'ТАРИФЫ', pricing_sub:'Без скрытых комиссий. Платишь только за размещение.',
+    plan1_tier:'Базовый', plan1_per:'навсегда бесплатно',
+    plan2_tier:'★ Pro — Популярный', plan2_per:'в месяц · отмена в любой момент',
+    f1:'Профиль в каталоге', f2:'До 2 услуг', f2b:'Неограниченно услуг', f3:'Значок Pro', f4:'Приоритет в поиске', f5:'Расширенная статистика',
+    plan1_cta:'Начать бесплатно', plan2_cta:'Попробовать Pro',
+    cta_h:'ГОТОВ НАЧАТЬ?', cta_p:'Создай профиль бесплатно — займёт меньше 5 минут.', cta_btn:'Разместить профиль →',
+    footer_terms:'Условия', footer_privacy:'Конфиденциальность', footer_contact:'Контакт',
+    marquee:['SMM / Маркетинг','Дизайн','Разработка','Копирайтинг','Фото / Видео','Переводы','Брендинг','Аналитика','Email-маркетинг','UI/UX дизайн']
+  },
+  en: {
+    nav_catalog:'Catalog', nav_how:'How it works', nav_pricing:'Pricing', nav_cta:'List your profile',
+    hero_tag:'Freelancer Catalog', hero_h1_1:'FIND THE', hero_h1_2:'BEST', hero_h1_3:'SPECIALIST',
+    hero_sub:'Freelink — where businesses find freelancers and freelancers find clients. No commissions for clients. No middlemen.',
+    hero_btn1:'Find a specialist', hero_btn2:'List your profile',
+    stat1:'Freelancers', stat2:'Categories', stat3:'Average rating', stat4:'Client commission',
+    search_label:'Search specialists', search_ph:'Search: SMM, logo, website...', search_btn:'Search',
+    cat_all:'All', cat_smm:'SMM / Marketing', cat_design:'Design', cat_dev:'Development', cat_copy:'Copywriting', cat_photo:'Photo / Video', cat_trans:'Translation',
+    popular_title:'Popular specialists', popular_all:'View all →',
+    role1:'SMM Manager', role2:'Web Developer', role3:'Graphic Designer', role4:'Copywriter · SEO',
+    how_h1:'HOW IT', how_h2:'WORKS', how_sub:'Three steps — and you\'re already getting clients.',
+    step1_h:'Create a profile', step1_p:'Fill in your info, add services and portfolio. Takes less than 5 minutes.',
+    step2_h:'Choose a plan', step2_p:'Free or Pro — to appear at the top of search and get a badge.',
+    step3_h:'Get clients', step3_p:'Clients find you directly and reach out with no middlemen or fees.',
+    pricing_h:'PRICING', pricing_sub:'No hidden fees. You only pay for your listing.',
+    plan1_tier:'Basic', plan1_per:'free forever',
+    plan2_tier:'★ Pro — Most Popular', plan2_per:'per month · cancel anytime',
+    f1:'Profile in catalog', f2:'Up to 2 services', f2b:'Unlimited services', f3:'Pro badge', f4:'Priority in search', f5:'Advanced analytics',
+    plan1_cta:'Start for free', plan2_cta:'Try Pro',
+    cta_h:'READY TO START?', cta_p:'Create your profile for free — takes less than 5 minutes.', cta_btn:'List your profile →',
+    footer_terms:'Terms', footer_privacy:'Privacy', footer_contact:'Contact',
+    marquee:['SMM / Marketing','Design','Development','Copywriting','Photo / Video','Translation','Branding','Analytics','Email Marketing','UI/UX Design']
+  }
+};
+
+function buildMarquee(lang) {
+  const items = T[lang].marquee;
+  const track = document.getElementById('marqueeTrack');
+  track.innerHTML = [...items,...items].map(i=>`<span class="marquee-item"><span>✦</span>${i}</span>`).join('');
+}
+
+function setLang(lang) {
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+  const t = T[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.getAttribute('data-i18n');
+    if(t[k]) el.textContent=t[k];
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{
+    const k=el.getAttribute('data-i18n-ph');
+    if(t[k]) el.placeholder=t[k];
+  });
+  buildMarquee(lang);
+}
+
+document.querySelectorAll('.chip').forEach(c=>{
+  c.addEventListener('click',()=>{
+    document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));
+    c.classList.add('active');
+  });
+});
+
+buildMarquee('ru');
+</script>
+</body>
+</html>
