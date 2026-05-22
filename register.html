@@ -294,7 +294,7 @@
 
       <div class="btn-row">
         <button class="btn-back-form" onclick="goStep(2)" data-i18n="btn_back">← Назад</button>
-        <button class="btn-next" onclick="showSuccess()" data-i18n="btn_register">Создать профиль →</button>
+        <button class="btn-next" onclick="goToPayment()" data-i18n="btn_register">Создать профиль →</button>
       </div>
     </div>
 
@@ -406,6 +406,15 @@ function toggleTag(el){
   if(el.classList.contains('selected')){el.classList.remove('selected');return;}
   if(selected.length>=6)return;
   el.classList.add('selected');
+}
+
+function goToPayment(){
+  const selected = document.querySelector(".plan-option.selected input");
+  if(selected && selected.value === "pro"){
+    window.location.href = "https://buy.stripe.com/test_6oUeVe2MG20g5ficto9fW00";
+  } else {
+    showSuccess();
+  }
 }
 
 function showSuccess(){
